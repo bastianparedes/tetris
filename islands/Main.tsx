@@ -1,18 +1,16 @@
-import { useState } from "preact/hooks";
-import Controller from "./Controller.tsx";
+import Board from "../components/Board.tsx";
+import usePlayer from './hooks/usePlayer.tsx';
 
 const Component = () => {
-  const [gameStarted, setGameStarted] = useState(false);
+  const { board, figure, initGame, gameIsOn } = usePlayer(); 
 
-  const startGame = () => setGameStarted(true);
-  const stopGame = () => setGameStarted(false);
+  if (gameIsOn) return <Board board={board} figure={figure} />;
 
-  if (gameStarted) return <Controller stopGame={stopGame} />;
   return (
     <div className="w-screen h-screen flex justify-center items-center">
       <button
         className="p-10 border border-black rounded-xl text-4xl"
-        onClick={startGame}
+        onClick={initGame}
       >
         Start Game
       </button>
