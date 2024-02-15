@@ -121,17 +121,24 @@ const getFigureCanBeInsertedInBoard = (
   return result;
 };
 
-const getInitialState = () => ({
-  bag: getBagShapes(),
-  board: getEmptyBoard(),
-  figure: {
-    position: {
-      x: Math.floor(boardSize.width / 2),
-      y: 0,
+const getInitialState = () => {
+  const bag = getBagShapes();
+  const shape = bag[0];
+  bag.shift();
+  return {
+    bag,
+    board: getEmptyBoard(),
+    figure: {
+      position: {
+        x: Math.floor(boardSize.width / 2),
+        y: 0,
+      },
+      shape: shape
     },
-    shape: getRandomShape()
-  },
-});
+  }
+};
+
+const initialState = getInitialState();
 
 const hook = () => {
   const [intervalState, setIntervalState] = useState<undefined | number>();
@@ -302,7 +309,7 @@ const hook = () => {
 
       return previousState;
     },
-    getInitialState()
+    initialState
   );
 
   const initGame = () => {
@@ -335,6 +342,7 @@ const hook = () => {
   }, []);
 
   return {
+    bag: state.bag,
     board: state.board,
     figure: state.figure,
     initGame,

@@ -1,4 +1,5 @@
 interface Props {
+  bag: number[][][];
   board: number[][];
   figure: {
     shape: number[][];
@@ -9,7 +10,7 @@ interface Props {
   };
 }
 
-const Component = ({ board, figure }: Props) => {
+const Component = ({ bag, board, figure }: Props) => {
   const color = [
     "bg-white",
     "bg-blue-400",
@@ -20,6 +21,8 @@ const Component = ({ board, figure }: Props) => {
     "bg-violet-400",
     "bg-yellow-400",
   ];
+
+  console.log(bag);
 
   const boardClone = structuredClone(board);
   figure.shape.forEach((rowValues, row) => {
@@ -43,7 +46,7 @@ const Component = ({ board, figure }: Props) => {
                   >
                     <div
                       className={`w-11/12 aspect-square rounded-full ${
-                        color[cell]
+                        color[cell] ?? "bg-black"
                       }`}
                     >
                     </div>
