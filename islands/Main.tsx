@@ -1,8 +1,8 @@
 import Board from "../components/Board.tsx";
-import usePlayer from './hooks/usePlayer.tsx';
+import usePlayer from "./hooks/usePlayer.tsx";
 
 const Component = () => {
-  const { board, figure, initGame, gameIsOn } = usePlayer(); 
+  const { board, figure, initGame, gameIsOn } = usePlayer();
 
   if (gameIsOn) return <Board board={board} figure={figure} />;
 

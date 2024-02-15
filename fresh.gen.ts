@@ -5,7 +5,6 @@
 import * as $_app from "./routes/_app.tsx";
 import * as $api_joke from "./routes/api/joke.ts";
 import * as $index from "./routes/index.tsx";
-import * as $Controller from "./islands/Controller.tsx";
 import * as $Main from "./islands/Main.tsx";
 import * as $hooks_usePlayer from "./islands/hooks/usePlayer.tsx";
 import { type Manifest } from "$fresh/server.ts";
@@ -17,7 +16,6 @@ const manifest = {
     "./routes/index.tsx": $index,
   },
   islands: {
-    "./islands/Controller.tsx": $Controller,
     "./islands/Main.tsx": $Main,
     "./islands/hooks/usePlayer.tsx": $hooks_usePlayer,
   },

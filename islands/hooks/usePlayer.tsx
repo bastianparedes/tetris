@@ -1,5 +1,4 @@
 import { useEffect, useReducer, useState } from "preact/hooks";
-import View from "../../components/Board.tsx";
 
 type Board = number[][];
 type Figure = {
@@ -8,7 +7,7 @@ type Figure = {
     y: number;
   };
   shape: number[][];
-}
+};
 
 const boardSize = {
   width: 10,
@@ -86,7 +85,7 @@ const getBagShapes = () => {
     shapes.Z,
   ];
   return shapesArray.toSorted(() => Math.random() - 0.5);
-}
+};
 
 const getRotatedShape = <T,>(figure: T[][]): T[][] => {
   const newFigure = Array.from(
@@ -105,16 +104,15 @@ const getRotatedShape = <T,>(figure: T[][]): T[][] => {
 
 const getFigureCanBeInsertedInBoard = (
   board: Board,
-  shape: Figure['shape'],
-  position: Figure['position'],
+  shape: Figure["shape"],
+  position: Figure["position"],
 ) => {
   const result = shape.every((rowValues, row) =>
     rowValues.every((cell, column) => {
       if (cell === 0) return true;
       const boardRow = board[position.y + row];
       if (boardRow === undefined) return false;
-      const boardCell =
-        board[position.y + row][position.x + column];
+      const boardCell = board[position.y + row][position.x + column];
       if (boardCell === undefined) return false;
       return boardCell === 0;
     })
@@ -124,13 +122,14 @@ const getFigureCanBeInsertedInBoard = (
 };
 
 const getInitialState = () => ({
+  bag: getBagShapes(),
   board: getEmptyBoard(),
   figure: {
-    shape: getRandomShape(),
     position: {
       x: Math.floor(boardSize.width / 2),
       y: 0,
     },
+    shape: getRandomShape()
   },
 });
 
@@ -139,10 +138,9 @@ const hook = () => {
   const [gameIsOn, setGameIsOn] = useState(false);
   const [state, dispatch] = useReducer(
     (previousState, action: string) => {
-      if (action === 'initGame') {
+      if (action === "initGame") {
         return getInitialState();
-      }
-
+      } else if (!gameIsOn) return previousState;
       else if (action === "nextStep") {
         // Lo mueve hacia a abajo si se puede
         const newPosition = {
@@ -189,7 +187,9 @@ const hook = () => {
         }
 
         // Setea otra figura
-        newState.figure.shape = getRandomShape();
+        newState.figure.shape = newState.bag[0]
+        newState.bag.shift();
+        if (newState.bag.length === 0) newState.bag = getBagShapes();
 
         // Reinicia la posición de la figura
         newState.figure.position = {
@@ -305,11 +305,9 @@ const hook = () => {
     getInitialState()
   );
 
-  
-
   const initGame = () => {
     setGameIsOn(true);
-    dispatch('initGame');
+    dispatch("initGame");
     setIntervalState(setInterval(() => {
       dispatch("nextStep");
     }, 300));
@@ -329,8 +327,6 @@ const hook = () => {
     };
     document.addEventListener("keydown", handleKeyDown);
 
-    
-
     return () => {
       document.addEventListener("keydown", handleKeyDown);
       document.removeEventListener("keydown", handleKeyDown);
@@ -342,7 +338,7 @@ const hook = () => {
     board: state.board,
     figure: state.figure,
     initGame,
-    gameIsOn
+    gameIsOn,
   };
 };
 
