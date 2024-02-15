@@ -8,9 +8,10 @@ interface Props {
       y: number;
     };
   };
+  score: number;
 }
 
-const Component = ({ bag, board, figure }: Props) => {
+const Component = ({ bag, board, figure, score }: Props) => {
   const color = [
     "bg-white",
     "bg-blue-400",
@@ -22,7 +23,7 @@ const Component = ({ bag, board, figure }: Props) => {
     "bg-yellow-400",
   ];
 
-  console.log(bag);
+  const nextShape = bag[0];
 
   const boardClone = structuredClone(board);
   figure.shape.forEach((rowValues, row) => {
@@ -34,28 +35,60 @@ const Component = ({ bag, board, figure }: Props) => {
 
   return (
     <div className="w-screen h-screen flex items-center justify-center">
-      <div className="border-black border-solid border">
-        {boardClone.map((rowValues, row) => {
-          return (
-            <div className="flex" key={row}>
-              {rowValues.map((cell, column) => {
-                return (
-                  <div
-                    className="aspect-square h-10 border-black border-solid border flex items-center justify-center"
-                    key={`${row}-${column}`}
-                  >
+      <div className="relative flex items-start justify-center">
+        <div className="border-black border-solid border">
+          {boardClone.map((rowValues, row) => {
+            return (
+              <div className="flex" key={row}>
+                {rowValues.map((cell, column) => {
+                  return (
                     <div
-                      className={`w-11/12 aspect-square rounded-full ${
-                        color[cell] ?? "bg-black"
-                      }`}
+                      className="aspect-square h-10 border-black border-solid border flex items-center justify-center"
+                      key={`${row}-${column}`}
                     >
+                      <div
+                        className={`w-11/12 aspect-square rounded-full ${
+                          color[cell]
+                        }`}
+                      >
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
-          );
-        })}
+                  );
+                })}
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="absolute right-0 top-0 translate-x-[110%]">
+          <div>
+            <span>Score:</span>
+            <span>{score}</span>
+          </div>
+          <div className="border-black border-solid border">
+            {nextShape.map((rowValues, row) => {
+              return (
+                <div className="flex" key={row}>
+                  {rowValues.map((cell, column) => {
+                    return (
+                      <div
+                        className="aspect-square h-10 border-black border-solid border flex items-center justify-center"
+                        key={`${row}-${column}`}
+                      >
+                        <div
+                          className={`w-11/12 aspect-square rounded-full ${
+                            color[cell]
+                          }`}
+                        >
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </div>
     </div>
   );

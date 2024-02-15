@@ -60,20 +60,6 @@ const shapes = {
   ],
 };
 
-const getRandomShape = () => {
-  const shapesArray = [
-    shapes.I,
-    shapes.J,
-    shapes.L,
-    shapes.O,
-    shapes.S,
-    shapes.T,
-    shapes.Z,
-  ];
-  const indexRandom = Math.floor(Math.random() * (shapesArray.length));
-  return structuredClone(shapesArray[indexRandom]);
-};
-
 const getBagShapes = () => {
   const shapesArray = [
     shapes.I,
@@ -133,9 +119,10 @@ const getInitialState = () => {
         x: Math.floor(boardSize.width / 2),
         y: 0,
       },
-      shape: shape
+      shape: shape,
     },
-  }
+    score: 0,
+  };
 };
 
 const initialState = getInitialState();
@@ -187,14 +174,14 @@ const hook = () => {
 
         if (thereIsAPieceInTopRow) {
           clearInterval(intervalState);
-          alert("GAME OVER");
+          alert(`GAME OVER.\nScore: ${previousState.score}`);
           setGameIsOn(false);
           stopGame();
           return newState;
         }
 
         // Setea otra figura
-        newState.figure.shape = newState.bag[0]
+        newState.figure.shape = newState.bag[0];
         newState.bag.shift();
         if (newState.bag.length === 0) newState.bag = getBagShapes();
 
@@ -202,20 +189,22 @@ const hook = () => {
         newState.figure.position = {
           x: Math.floor(boardSize.width / 2),
           y: 0,
-        },
-          // Quita las filas
-          newState.board = newState.board.filter((row) =>
-            row.some((cell) => cell === 0)
-          );
+        };
+
+        // Quita las filas
+        newState.board = newState.board.filter((row) =>
+          row.some((cell) => cell === 0)
+        );
+
+        // Calcula el nuevo score
+        const rowsCleaned = previousState.board.length - newState.board.length;
+        newState.score += rowsCleaned ** 2;
 
         // Agrega las filas faltantes
-        for (
-          let i = 0;
-          i < previousState.board.length - newState.board.length;
-          i++
-        ) {
+        while (previousState.board.length > newState.board.length) {
           newState.board.unshift(getEmptyRow());
         }
+
         return newState;
       } else if (action === "rotate") {
         const rotatedShape = getRotatedShape(
@@ -309,7 +298,7 @@ const hook = () => {
 
       return previousState;
     },
-    initialState
+    initialState,
   );
 
   const initGame = () => {
@@ -347,6 +336,7 @@ const hook = () => {
     figure: state.figure,
     initGame,
     gameIsOn,
+    score: state.score,
   };
 };
 

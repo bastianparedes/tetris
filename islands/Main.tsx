@@ -2,9 +2,11 @@ import Board from "../components/Board.tsx";
 import usePlayer from "./hooks/usePlayer.tsx";
 
 const Component = () => {
-  const { bag, board, figure, initGame, gameIsOn } = usePlayer();
+  const { bag, board, figure, initGame, gameIsOn, score } = usePlayer();
 
-  if (gameIsOn) return <Board bag={bag} board={board} figure={figure} />;
+  if (gameIsOn) {
+    return <Board bag={bag} board={board} figure={figure} score={score} />;
+  }
 
   return (
     <div className="w-screen h-screen flex justify-center items-center">
